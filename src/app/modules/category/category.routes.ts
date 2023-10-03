@@ -17,6 +17,11 @@ router.post(
 );
 router.get('/', CategoryController.getAll);
 router.get('/:id', CategoryController.single);
+router.delete(
+  '/:id',
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
+  CategoryController.deleteSingle
+);
 router.patch(
   '/:id',
   auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
