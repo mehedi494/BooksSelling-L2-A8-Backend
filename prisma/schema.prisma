@@ -1,0 +1,191 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  admin
+  customer
+}
+
+model users {
+  id            String          @id @default(uuid())
+  name          String
+  email         String          @unique
+  password      String
+  role          UserRole        @default(customer)
+  contactNo     String
+  address       String
+  profileImg    String
+  review_rating review_rating[]
+  orders        orders[]
+}
+
+model category {
+  id    String  @id @default(uuid())
+  title String
+  books books[]
+}
+
+model books {
+  id              String          @id @default(uuid())
+  title           String
+  author          String
+  price           Float
+  grenre          String
+  publicationDate DateTime
+  categoryId      String
+  categories      category        @relation(fields: [categoryId], references: [id])
+  review_rating   review_rating[]
+}
+
+model review_rating {
+  id     String @id @default(uuid())
+  review String
+  rating Int
+  userId String
+  users  users  @relation(fields: [userId], references: [id])
+
+  books  books  @relation(fields: [bookId], references: [id])
+  bookId String
+}
+
+model orders {
+  id     String @id @default(uuid())
+  userId String
+  users  users  @relation(fields: [userId], references: [id])
+  orderBooks Json
+}
+
+// model AcademicSemester {
+//   id         String    @id @default(uuid())
+//   title      String
+//   code       String
+//   startMonth String
+//   endMonth   String
+//   createdAt  DateTime  @default(now())
+//   updatedAt  DateTime  @updatedAt
+//   year       Int
+//   students   Student[]
+
+//   @@map("academic_semesters")
+// }
+
+// model AcademicFaculty {
+//   id                  String               @id @default(uuid())
+//   title               String
+//   createdAt           DateTime             @default(now())
+//   updatedAt           DateTime             @updatedAt
+//   academicDepartments AcademicDepartment[]
+//   faculties           Faculty[]
+//   students            Student[]
+
+//   @@map("academic_faculty")
+// }
+
+// model AcademicDepartment {
+//   id                String          @id @default(uuid())
+//   title             String
+//   createdAt         DateTime        @default(now())
+//   updatedAt         DateTime        @updatedAt
+//   academicFacultyId String
+//   academicFaculty   AcademicFaculty @relation(fields: [academicFacultyId], references: [id])
+//   faculties         Faculty[]
+//   students          Student[]
+
+//   @@map("academic_department")
+// }
+
+// model Student {
+//   id                   String             @id @default(uuid())
+//   studentId            String
+//   firstName            String
+//   lastName             String
+//   middleName           String
+//   profileImage         String?
+//   email                String
+//   contactNo            String
+//   gender               String
+//   bloodGroup           String
+//   createdAt            DateTime           @default(now())
+//   updatedAt            DateTime           @updatedAt
+//   academicSemesterId   String
+//   academicDepartmentId String
+//   academicFacultyId    String
+//   academicDepartment   AcademicDepartment @relation(fields: [academicDepartmentId], references: [id])
+//   academicFaculty      AcademicFaculty    @relation(fields: [academicFacultyId], references: [id])
+//   academicSemester     AcademicSemester   @relation(fields: [academicSemesterId], references: [id])
+
+//   @@map("students")
+// }
+
+// model Faculty {
+//   id                   String             @id @default(uuid())
+//   facultyId            String
+//   firstName            String
+//   lastName             String
+//   middleName           String
+//   profileImage         String
+//   email                String
+//   contactNo            String
+//   gender               String
+//   bloodGroup           String
+//   designation          String
+//   createdAt            DateTime           @default(now())
+//   updatedAt            DateTime           @updatedAt
+//   academicDepartmentId String
+//   academicFacultyId    String
+//   academicDepartment   AcademicDepartment @relation(fields: [academicDepartmentId], references: [id])
+//   academicFaculty      AcademicFaculty    @relation(fields: [academicFacultyId], references: [id])
+
+//   @@map("faculties")
+// }
+
+// model Building {
+//   id        String   @id @default(uuid())
+//   title     String
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   rooms     Room[]
+
+//   @@map("buildings")
+// }
+
+// model Room {
+//   id         String   @id @default(uuid())
+//   roomNumber String
+//   floor      String
+//   createdAt  DateTime @default(now())
+//   updatedAt  DateTime @updatedAt
+//   building   Building @relation(fields: [buildingId], references: [id])
+//   buildingId String
+
+//   @@map("rooms")
+// }
+
+// model Course {
+//   id              String                 @id @default(uuid())
+//   title           String
+//   code            String
+//   credits         Int                    @default(0)
+//   createdAt       DateTime               @default(now())
+//   updatedAt       DateTime               @updatedAt
+//   preRequisite    CourseToPrerequisite[] @relation("CourseToPrerequisite")
+//   preRequisiteFor CourseToPrerequisite[] @relation("PrerequisiteToCourse")
+
+//   @@map("courses")
+// }
+
+// model CourseToPrerequisite {
+//   courseId       String
+//   preRequisiteId String
+
+//   course       Course @relation(fields: [courseId], references: [id], name: "CourseToPrerequisite")
+//   preRequisite Course @relation(fields: [preRequisiteId], references: [id], name: "PrerequisiteToCourse")
+
+//   @@id([courseId, preRequisiteId])
+// }
