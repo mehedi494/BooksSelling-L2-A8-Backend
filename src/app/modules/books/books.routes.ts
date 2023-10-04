@@ -22,6 +22,12 @@ router.post(
   validateRequest(BookSValidation.createBooks), // Request validation middleware
   BooksController.createBook // Route handler for creating a book
 );
+router.patch(
+  '/:id',
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN), // Authentication middleware
+  validateRequest(BookSValidation.updateBook), // Request validation middleware
+  BooksController.updateSingle // Route handler for creating a book
+);
 
 // Get all books from the database
 router.get('/', BooksController.getAllFromDb);

@@ -110,21 +110,26 @@ const byCategoryBook = async (
   };
 };
 
-const singleBook = async (id: string): Promise<Partial<books> | null> => {
+const singleBook = async (id: string): Promise<books | null> => {
   console.log(id);
   const result = await prisma.books.findUnique({
     where: {
       id,
     },
-    // select: {
-    //   author: true,
-    //   categoryId: true,
-    //   genre: true,
-    //   id: true,
-    //   price: true,
-    //   publicationDate: true,
-    //   title: true,
-    // },
+  });
+
+  return result;
+};
+const updateSingle = async (
+  id: string,
+  payload: Partial<books>
+): Promise<books | null> => {
+  console.log(id);
+  const result = await prisma.books.update({
+    where: {
+      id,
+    },
+    data: payload,
   });
 
   return result;
@@ -135,4 +140,5 @@ export const BooksService = {
   getAllFromDb,
   byCategoryBook,
   singleBook,
+  updateSingle,
 };
