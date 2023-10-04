@@ -1,3 +1,4 @@
+import { paginationFields } from './../../../constants/pagination';
 import { Prisma, books } from '@prisma/client';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
@@ -76,7 +77,42 @@ const getAllFromDb = async (
   };
 };
 
+
+const byCategoryBook = async (categoryId: string, options:IPaginationOptions): Promise<IGenericResponse<books[]>> => {
+
+  const {page,limit,skip}=paginationHelpers.calculatePagination(options)
+  const result = await prisma.books.findMany({
+    where:{
+      categoryId
+    },
+    take:limit,
+    skip,
+    orderBy:
+      options.sortBy && options.sortOrder
+        ? {
+            [options.sortBy]: options.sortOrder,
+          }
+        : {
+            title: 'desc',
+          },
+  });
+  const total = await prisma.books.count();
+  const totalPage = Math.ceil(total / limit);
+
+  return{
+    meta:{
+      page,
+      limit,
+      total,
+      totalPage
+    },
+    data:result
+  };
+};
+
+
+
 export const BooksService = {
   createBooks,
-  getAllFromDb,
+  getAllFromDb,byCategoryBook
 };

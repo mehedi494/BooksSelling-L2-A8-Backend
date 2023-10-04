@@ -30,7 +30,21 @@ const createBook = catchAsync(async (req: Request, res: Response) => {
       data: result.data,
     });
   });
+  const byCategoryBook = catchAsync(async (req: Request, res: Response) => {
+    // const filters = pick(req.query, BooksSearchableField);
+    const id = req.params.categoryId
+    const options = pick(req.query, paginationFields);
+  
+    const result = await BooksService.byCategoryBook(id, options);
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: 'Category wise book fetched successfully',
+      meta: result.meta,
+      data: result.data,
+    });
+  });
 
   export const BooksController ={
-    createBook,getAllFromDb
+    createBook,getAllFromDb,byCategoryBook
   }

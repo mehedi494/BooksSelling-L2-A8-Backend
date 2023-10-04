@@ -16,5 +16,6 @@ router.post(
   BooksController.createBook
 );
 router.get('/', BooksController.getAllFromDb);
+router.get('/:categoryId/category', BooksController.byCategoryBook);
 
 export const BooksRoutes = router;
