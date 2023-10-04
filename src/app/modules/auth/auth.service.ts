@@ -8,14 +8,11 @@ import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import prisma from '../../../shared/prisma';
 import { ILoginData, ILoginResponse } from '../user/user.interface';
 
-
 /*........Auth Service...*/
 const createUser = async (data: users): Promise<users> => {
   data.password = await bcrypt.hash(data.password, Number(11));
   const result = await prisma.users.create({
     data,
-
-    include: {},
   });
   result.password = '';
 
@@ -50,8 +47,6 @@ const loginUser = async (data: ILoginData): Promise<ILoginResponse> => {
 };
 
 export const AuthService = {
-    createUser,
-    loginUser,
-
-  };
-  
+  createUser,
+  loginUser,
+};
