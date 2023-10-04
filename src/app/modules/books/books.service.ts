@@ -124,12 +124,20 @@ const updateSingle = async (
   id: string,
   payload: Partial<books>
 ): Promise<books | null> => {
-  console.log(id);
+  
   const result = await prisma.books.update({
     where: {
       id,
     },
     data: payload,
+  });
+
+  return result;
+};
+const deleteSingle = async (id: string): Promise<books | null> => {
+  
+  const result = await prisma.books.delete({
+    where: { id },
   });
 
   return result;
@@ -141,4 +149,5 @@ export const BooksService = {
   byCategoryBook,
   singleBook,
   updateSingle,
+  deleteSingle,
 };

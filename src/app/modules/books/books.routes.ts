@@ -28,6 +28,11 @@ router.patch(
   validateRequest(BookSValidation.updateBook), // Request validation middleware
   BooksController.updateSingle // Route handler for creating a book
 );
+router.delete(
+  '/:id',
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN), // Authentication middleware
+  BooksController.deleteSingle
+);
 
 // Get all books from the database
 router.get('/', BooksController.getAllFromDb);
