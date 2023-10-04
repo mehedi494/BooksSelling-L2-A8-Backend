@@ -9,13 +9,21 @@ import { BookSValidation } from './books.validation';
 
 const router = express.Router();
 
+// Import necessary modules and dependencies
+
+// Define your routes
+router.get('/:categoryId/category', BooksController.byCategoryBook);
+router.get('/:id', BooksController.singleBook);
+
+// Create a new book (accessible to SUPER_ADMIN and ADMIN users)
 router.post(
   '/create-book',
-  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN),
-  validateRequest(BookSValidation.createBooks),
-  BooksController.createBook
+  auth(ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.ADMIN), // Authentication middleware
+  validateRequest(BookSValidation.createBooks), // Request validation middleware
+  BooksController.createBook // Route handler for creating a book
 );
+
+// Get all books from the database
 router.get('/', BooksController.getAllFromDb);
-router.get('/:categoryId/category', BooksController.byCategoryBook);
 
 export const BooksRoutes = router;

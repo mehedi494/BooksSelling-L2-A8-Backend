@@ -1,4 +1,3 @@
-import { paginationFields } from './../../../constants/pagination';
 import { Prisma, books } from '@prisma/client';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
@@ -77,15 +76,16 @@ const getAllFromDb = async (
   };
 };
 
-
-const byCategoryBook = async (categoryId: string, options:IPaginationOptions): Promise<IGenericResponse<books[]>> => {
-
-  const {page,limit,skip}=paginationHelpers.calculatePagination(options)
+const byCategoryBook = async (
+  categoryId: string,
+  options: IPaginationOptions
+): Promise<IGenericResponse<books[]>> => {
+  const { page, limit, skip } = paginationHelpers.calculatePagination(options);
   const result = await prisma.books.findMany({
-    where:{
-      categoryId
+    where: {
+      categoryId,
     },
-    take:limit,
+    take: limit,
     skip,
     orderBy:
       options.sortBy && options.sortOrder
@@ -99,20 +99,40 @@ const byCategoryBook = async (categoryId: string, options:IPaginationOptions): P
   const total = await prisma.books.count();
   const totalPage = Math.ceil(total / limit);
 
-  return{
-    meta:{
+  return {
+    meta: {
       page,
       limit,
       total,
-      totalPage
+      totalPage,
     },
-    data:result
+    data: result,
   };
 };
 
+const singleBook = async (id: string): Promise<Partial<books> | null> => {
+  console.log(id);
+  const result = await prisma.books.findUnique({
+    where: {
+      id,
+    },
+    // select: {
+    //   author: true,
+    //   categoryId: true,
+    //   genre: true,
+    //   id: true,
+    //   price: true,
+    //   publicationDate: true,
+    //   title: true,
+    // },
+  });
 
+  return result;
+};
 
 export const BooksService = {
   createBooks,
-  getAllFromDb,byCategoryBook
+  getAllFromDb,
+  byCategoryBook,
+  singleBook,
 };
