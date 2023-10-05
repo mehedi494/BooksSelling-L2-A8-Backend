@@ -24,7 +24,6 @@ const createOrder = async (
   return result;
 };
 
-
 const getAll = async (payload: JwtPayload): Promise<orders[]> => {
   const { userId, role } = payload;
   const user = await prisma.users.findUnique({
@@ -37,16 +36,47 @@ const getAll = async (payload: JwtPayload): Promise<orders[]> => {
 
   if (user && role === 'admin') {
     const result = await prisma.orders.findMany({});
-    console.log('as an admin');
+
     return result;
   }
-  console.log('only same user');
+  const orders = await prisma.orders.findMany({where:{userId:userId as string}})
+if( !orders.length && user.id !== orders[0]?.userId ){
+  throw new ApiError(404,"not order found")
+}
   return await prisma.orders.findMany({
     where: { userId },
+  });
+};
+
+const getSingle = async (
+  orderId: string,
+  payload: JwtPayload
+): Promise<orders | null> => {
+  const { userId, role } = payload;
+  const user = await prisma.users.findUnique({
+    where: { id: userId as string },
+  });
+console.log(user?.id,role);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'user not exist');
+  }
+
+  if (user && role === 'admin') {
+    const result = await prisma.orders.findUnique({where:{id: orderId}});
+
+    return result;
+  }
+  const orders = await prisma.orders.findUnique({where:{id:userId as string}})
+if(  user.id !== orders?.userId ){
+  throw new ApiError(404,"not order found")
+}
+  return await prisma.orders.findUnique({
+    where: { id: orderId },
   });
 };
 
 export const OrderService = {
   createOrder,
   getAll,
+  getSingle,
 };

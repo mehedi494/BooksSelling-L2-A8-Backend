@@ -28,7 +28,17 @@ const getAll = catchAsync(async (req: Request, res: Response) => {
       data: result,
     });
   });
+const getSingle = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params?.orderId
+    const result = await OrderService.getSingle(id,req.user as JwtPayload);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'All order fetch successfull',
+      data: result,
+    });
+  });
 
   export const OrderController ={
-    createOrder,getAll
+    createOrder,getAll,getSingle
   }
