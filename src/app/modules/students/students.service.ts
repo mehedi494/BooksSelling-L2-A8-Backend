@@ -27,7 +27,7 @@ const getAllFromDB = async (
   filters: IStudentFilterRequest,
   options: IPaginationOptions
 ): Promise<IGenericResponse<Student[]>> => {
-  const { limit, page, skip } = paginationHelpers.calculatePagination(options);
+  const {  size, page, skip } = paginationHelpers.calculatePagination(options);
   const { searchTerm, ...filterData } = filters;
 
   const andConditions = [];
@@ -74,7 +74,7 @@ const getAllFromDB = async (
     },
     where: whereConditions,
     skip,
-    take: limit,
+    take: size,
     orderBy:
       options.sortBy && options.sortOrder
         ? { [options.sortBy]: options.sortOrder }
@@ -90,7 +90,7 @@ const getAllFromDB = async (
     meta: {
       total,
       page,
-      limit,
+      limit: size,
     },
     data: result,
   };

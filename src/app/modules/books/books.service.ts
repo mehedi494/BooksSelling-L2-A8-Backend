@@ -21,10 +21,10 @@ const getAllFromDb = async (
   filters: IBooksRequest,
   options: IPaginationOptions
 ): Promise<IGenericResponse<books[] | null>> => {
-  const { search, ...otherData } = filters;
-  const { page, limit, skip } = paginationHelpers.calculatePagination(options);
+  const { search, minPrice, maxPrice, ...otherData } = filters;
+  const { page, size, skip } = paginationHelpers.calculatePagination(options);
   const andCondition = [];
-  console.log(otherData);
+
   if (search) {
     andCondition.push({
       OR: BooksSearchableField.map(field => ({
@@ -33,10 +33,23 @@ const getAllFromDb = async (
     });
   }
 
+  if (minPrice !== undefined) {
+    andCondition.push({
+      price: { gte: minPrice }, // Minimum price condition
+    });
+  }
+
+  if (maxPrice !== undefined) {
+    andCondition.push({
+      price: { lte: maxPrice }, // Maximum price condition
+    });
+  }
+
   if (Object.keys(otherData).length > 0) {
     andCondition.push({
       AND: Object.keys(otherData).map(key => ({
         [key]: {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           equals: (otherData as any)[key],
         },
       })),
@@ -49,7 +62,7 @@ const getAllFromDb = async (
   const result = await prisma.books.findMany({
     where: whereCondition,
     skip,
-    take: limit,
+    take: size,
     orderBy:
       options.sortBy && options.sortOrder
         ? {
@@ -64,12 +77,12 @@ const getAllFromDb = async (
     },
   });
   const total = await prisma.books.count();
-  const totalPage = Math.ceil(total / limit);
+  const totalPage = Math.ceil(total / size);
   return {
     meta: {
       total,
       page,
-      limit,
+      size,
       totalPage,
     },
     data: result,
@@ -80,12 +93,12 @@ const byCategoryBook = async (
   categoryId: string,
   options: IPaginationOptions
 ): Promise<IGenericResponse<books[]>> => {
-  const { page, limit, skip } = paginationHelpers.calculatePagination(options);
+  const { page, size, skip } = paginationHelpers.calculatePagination(options);
   const result = await prisma.books.findMany({
     where: {
       categoryId,
     },
-    take: limit,
+    take: size,
     skip,
     orderBy:
       options.sortBy && options.sortOrder
@@ -97,12 +110,12 @@ const byCategoryBook = async (
           },
   });
   const total = await prisma.books.count();
-  const totalPage = Math.ceil(total / limit);
+  const totalPage = Math.ceil(total / size);
 
   return {
     meta: {
       page,
-      limit,
+      size,
       total,
       totalPage,
     },
@@ -124,7 +137,6 @@ const updateSingle = async (
   id: string,
   payload: Partial<books>
 ): Promise<books | null> => {
-  
   const result = await prisma.books.update({
     where: {
       id,
@@ -135,7 +147,6 @@ const updateSingle = async (
   return result;
 };
 const deleteSingle = async (id: string): Promise<books | null> => {
-  
   const result = await prisma.books.delete({
     where: { id },
   });

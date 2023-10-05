@@ -1,4 +1,5 @@
 export type IBooksRequest = {
-    search ?: string;
-    
-}
+  search?: string;
+  minPrice?: number;
+  maxPrice?: number;
+};
