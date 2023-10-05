@@ -57,6 +57,9 @@ const deleteSingle = async (id: string): Promise<users | null> => {
   return result;
 };
 
+
+
+
 export const UserService = {
   getAll,
   singleUser,
