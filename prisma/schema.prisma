@@ -49,10 +49,10 @@ model review_rating {
 }
 
 model orders {
-  id         String @id @default(uuid())
-  userId     String
-  orderBooks Json
-  users      users  @relation(fields: [userId], references: [id])
+  id           String @id @default(uuid())
+  userId       String
+  orderedBooks Json
+  users        users  @relation(fields: [userId], references: [id])
 }
 
 enum UserRole {
