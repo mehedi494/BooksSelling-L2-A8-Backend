@@ -17,7 +17,9 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/v1', routes);
 
-
+app.get("/",(req,res)=>{
+  res.send({status:true,message:"Server is running"})
+})
 //global error handler
 app.use(globalErrorHandler);
 
