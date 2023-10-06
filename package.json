@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/server.ts",
   "scripts": {
-    "start": "",
+    "start": "node dist/server.js",
     "build": "tsc",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "lint:check": "eslint --ignore-path .eslintignore --ext .js,.ts .",
@@ -12,7 +12,6 @@
     "prettier:check": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
     "prettier:fix": "prettier --write .",
     "lint-prettier": "yarn lint:check && yarn prettier:check",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "prisma generate"
   },
   "author": "mehedihasan.dev@outlook.com",
@@ -46,7 +45,6 @@
     "http-status": "^1.6.2",
     "jsonwebtoken": "^9.0.0",
     "prisma": "^5.3.1",
-    
     "winston": "^3.9.0",
     "winston-daily-rotate-file": "^4.7.1",
     "zod": "^3.21.4"
