@@ -1,6 +1,6 @@
 # BookSelling Backend
 
-## LIVE LINK [https://books-selling-l2-a8-backend-f4p9-l6kxvx0ur-mehedi494.vercel.app]
+## LIVE LINK [https://book-selling-backend-l2-a8-wvmxxkuim-mehedi494.vercel.app]
 
 ## Application Routes:
 ### User
